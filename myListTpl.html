@@ -1,0 +1,9 @@
+<div class="my-list" ng-swipe-left="scrollRight()" ng-swipe-right="scrollLeft()">
+    <div class="my-list-track">
+        <div class="list-item" ng-repeat="item in myList">{{item.name}}</div>
+    </div>
+</div>
+<div>
+    <button ng-click="scrollLeft()">Left</button>
+    <button ng-click="scrollRight()">Right</button>
+</div>
