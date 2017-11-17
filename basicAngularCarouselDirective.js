@@ -4,61 +4,68 @@ angular.module('basicAngularCarousel',[])
   return {
     restrict:'A',
     templateUrl:'myListTpl.html', 
-    scope: {
-      myList: '='
-    },
+    transclude: true,
     link: function(scope, el, attr) {
       var offset,
           percOffset,
           trackEl,
-          speed = 0.001,
           sections = 4,
-          sectionsPerc; 
+          sectionsPerc,
+          scrollCount,
+          listContainerEl,
+          listTrackEl,
+          numOfItems; 
           
       // find width
-      if (scope.myList) {
-        $timeout(function() { 
-          var width = el[0].clientWidth;
-          var section = width/sections;
-          sectionsPerc = 100/sections;
-          var fullWidth = section * scope.myList.length;
-          var fullWidthPerc = (100*fullWidth/width).toString() + '%';
-          var fullSectionPerc = (100*section/fullWidth).toString() +'%';
+     
+      $timeout(function() { 
+        var width = el[0].clientWidth;
+        var section = width/sections;
+        sectionsPerc = 100/sections;
+        
+        // get list container element
+        listContainerEl = el[0].querySelector('.my-list');
+        listTrackEl = listContainerEl.querySelector('.my-list-track');
+        numOfItems = listTrackEl.children.length;
+
+        var fullWidth = section * listTrackEl.children.length;
+        var fullWidthPerc = (100*fullWidth/width).toString() + '%';
+        var fullSectionPerc = (100*section/fullWidth).toString() +'%';
+        
+        listTrackEl.style.width = fullWidthPerc;  
+        for (var i = 0; i < numOfItems; i++) {
+          listTrackEl.children[i].style.width = fullSectionPerc;
+        }  
+         
+        percOffset = (listTrackEl.children.length % sections)/sections * 100; 
           
-          trackEl = el[0].children[0].children[0];
-          trackEl.style.width = fullWidthPerc; 
-          for (var i = 0; i < trackEl.children.length; i++) {
-            trackEl.children[i].style.width = fullSectionPerc;
-          } 
-          
-          percOffset = (scope.myList.length % sections)/sections * 100; 
-            
-        });
-      }
+      });
+      
       
       scope.scrollLeft = function() {
         var width = el[0].clientWidth;
         var section = width/sections;
-        var currentLeft = parseFloat(trackEl.style.left) || 0;
+        var currentLeft = parseFloat(listTrackEl.style.left) || 0;
         var newLeft = currentLeft + sectionsPerc;
         
         if (newLeft <= 0) {
-          trackEl.style.left = newLeft + '%';
+          listTrackEl.style.left = newLeft + '%';
         }
       };
       
       scope.scrollRight = function() {   
         var width = el[0].clientWidth; 
         var section = width/sections;   
-        var fullWidth = section * scope.myList.length;
-        var currentLeft = parseFloat(trackEl.style.left) || 0;
+        var fullWidth = section * numOfItems;
+        var currentLeft = parseFloat(listTrackEl.style.left) || 0;
 
         var newLeft = currentLeft - sectionsPerc;
 
         if (Math.abs(newLeft) <= percOffset) {  
-          trackEl.style.left = newLeft + '%';
+          listTrackEl.style.left = newLeft + '%';
         }
 
       };
     }
   };
+});
