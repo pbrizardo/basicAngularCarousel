@@ -17,6 +17,7 @@ angular.module('basicAngularCarousel',[])
           numOfItems; 
 
       var newLine;
+      var feature2;
           
       // find width
      
