@@ -15,6 +15,8 @@ angular.module('basicAngularCarousel',[])
           listContainerEl,
           listTrackEl,
           numOfItems; 
+
+      var newLine;
           
       // find width
      
